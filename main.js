@@ -23,11 +23,6 @@ var MasonryView = Backbone.View.extend({
 					return $el.find('.shb-content-body').text().length;
 				}
 			}
-			/*
-			columnWidth: 100,
-			isAnimated: true,
-			isFitWidth: true
-			*/
 		});
 		this.render();
 		this.collection.on('add', this._addItem, this);
@@ -45,11 +40,15 @@ MasonryView.prototype._addItem = function(item, opts) {
 	console.log('MasonryView._addItem', opts.index, item.toJSON());
 	var newItem = $(document.createElement('div')),
 		json = item.toJSON();
+	// Annotate for avatar filtering
 	if ( ! json.author.avatar) {
 		json.author.avatar = this.defaultAvatarUrl;
 	} else {
 		newItem.attr('data-hub-hasavatar', '');
 	}
+	// Annotate for source filtering
+	newItem.attr('data-hub-source-id', item.get('sourceId'));
+
 	newItem
 	  .addClass('shb-item')
 	  .attr('data-hub-contentId', json.id)
