@@ -7,12 +7,13 @@ var Backbone = require('backbone'),
 
 var MasonryView = Backbone.View.extend({
 	tagName: "div",
-	className: "hub-masonry",
+	className: "hub-IsotopeView",
 	events: {
 		'all': function () { console.log('MasonryView event', arguments); }
 	},
 	initialize: function (opts) {
-		this.$el.isotope({
+        this.$el.addClass(this.className);
+        this.$el.isotope({
 			itemSelector: '.hub-item',
 			isAnimated: true,
 			getSortData: {
@@ -24,21 +25,21 @@ var MasonryView = Backbone.View.extend({
 				}
 			}
 		});
-		this.$el.addClass('hub-IsotopeView');
 		this.render();
 		this.collection.on('add', this._addItem, this);
 	},
 	render: function () {
 		var self = this;
-		this.$el.addClass(this.className);
 		this.collection.forEach(function(item) {
-			self._addItem(item, {})
+			self._insertItem(item, {})
 		});
+        this.$el.imagesLoaded(function () {
+           self.$el.isotope('reLayout'); 
+        });
 	}
 });
 
-MasonryView.prototype._addItem = function(item, opts) {
-	console.log('MasonryView._addItem', opts.index, item.toJSON());
+MasonryView.prototype._insertItem = function (item, opts) {
 	var newItem = $(document.createElement('div')),
 		json = item.toJSON();
 
@@ -59,7 +60,7 @@ MasonryView.prototype._addItem = function(item, opts) {
 
 	var cv = new ContentView({
 		model: item,
-		el: newItem
+		el: newItem,
 	});
 
 	newItem
@@ -67,8 +68,19 @@ MasonryView.prototype._addItem = function(item, opts) {
 	  .attr('data-hub-contentId', json.id)
 
 	this.$el.append(newItem);
-	this.$el.isotope('insert', newItem, true);
+	return newItem;
+}
+MasonryView.prototype._addItem = function(item, opts) {
+	var $newItem = this._insertItem(item, opts);
+    if ($newItem) {
+	    var that = this;
+		$newItem.imagesLoaded(function () {
+	        that.$el.isotope('insert', $newItem, true);
+	    });
+    }
 };
+
+MasonryView.prototype._addItem
 
 MasonryView.prototype.go = function () {
 
