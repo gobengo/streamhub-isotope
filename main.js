@@ -3,7 +3,8 @@ var Backbone = require('backbone'),
 	Mustache = require('mustache'),
 	isotope = require('isotope'),
 	ContentTemplate = require('text!streamhub-backbone/templates/Content.html'),
-	ContentView = require('streamhub-backbone/views/ContentView');
+	ContentView = require('streamhub-backbone/views/ContentView'),
+	sources = require('streamhub-backbone/const/sources');
 
 var MasonryView = Backbone.View.extend({
 	tagName: "div",
@@ -12,20 +13,14 @@ var MasonryView = Backbone.View.extend({
 		'all': function () { console.log('MasonryView event', arguments); }
 	},
 	initialize: function (opts) {
+		this._contentViewOpts = opts.contentViewOptions || {};
+		this._sourceOpts = opts.sources || {};
         this.$el.addClass(this.className);
-        this.$el.isotope({
+		this.render();
+		this.$el.isotope({
 			itemSelector: '.hub-item',
 			isAnimated: true,
-			getSortData: {
-				id: function ($el) {
-					return $el.attr('data-hub-contentId');
-				},
-				bodyLength: function ($el) {
-					return $el.find('.hub-body-html').text().length;
-				}
-			}
 		});
-		this.render();
 		this.collection.on('add', this._addItem, this);
 	},
 	render: function () {
@@ -40,7 +35,8 @@ var MasonryView = Backbone.View.extend({
 });
 
 MasonryView.prototype._insertItem = function (item, opts) {
-	var newItem = $(document.createElement('div')),
+	var self = this,
+	    newItem = $(document.createElement('div')),
 		json = item.toJSON();
 
 	if ( ! json.author) {
@@ -49,19 +45,26 @@ MasonryView.prototype._insertItem = function (item, opts) {
         return;
     }
 
-	// Annotate for avatar filtering
-	if ( ! json.author.avatar) {
-		json.author.avatar = this.defaultAvatarUrl;
-	} else {
-		newItem.attr('data-hub-hasavatar', '');
-	}
 	// Annotate for source filtering
 	newItem.attr('data-hub-source-id', item.get('sourceId'));
 
-	var cv = new ContentView({
+	function _getContentViewOpts (content) {
+		var opts = {},
+			configuredOpts = _(opts).extend(self._contentViewOpts),
+			perSourceOpts;
+		if (content.get('source')==sources.TWITTER) {
+			return _(configuredOpts).extend(self._sourceOpts['twitter']||{});
+		}
+		if (content.get('source')==sources.RSS) {
+			return _(configuredOpts).extend(self._sourceOpts['rss']||{});
+		}
+		return configuredOpts;
+	}
+
+	var cv = new ContentView(_.extend({
 		model: item,
-		el: newItem,
-	});
+		el: newItem
+	}, _getContentViewOpts(item)));
 
 	newItem
 	  .addClass('hub-item')

@@ -10,7 +10,7 @@
     require.config({
       paths: {
         jquery: 'components/jquery/jquery',
-        "isotope": 'components/isotope/jquery.isotope',
+        isotope: 'components/isotope/jquery.isotope',
         underscore: 'components/underscore/underscore',
         backbone: 'components/backbone/backbone',
         "streamhub-isotope": "main",
@@ -22,14 +22,14 @@
         location: 'components/streamhub-backbone'
       }],
       shim: {
-        'backbone': {
+        backbone: {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
         },
-        'isotope': {
+        isotope: {
             deps: ['jquery']
         },
-        'underscore': {
+        underscore: {
             exports: '_'
         }
       }
@@ -55,7 +55,6 @@
         cursor: pointer;
         text-decoration: underline;
     }
-
     </style>
     <script>
     require(['jquery'], function($) {
