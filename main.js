@@ -4,7 +4,8 @@ var Backbone = require('backbone'),
 	isotope = require('isotope'),
 	ContentTemplate = require('text!streamhub-backbone/templates/Content.html'),
 	ContentView = require('streamhub-backbone/views/ContentView'),
-	sources = require('streamhub-backbone/const/sources');
+	sources = require('streamhub-backbone/const/sources'),
+    _ = require('underscore');
 
 var MasonryView = Backbone.View.extend({
 	tagName: "div",
@@ -15,12 +16,13 @@ var MasonryView = Backbone.View.extend({
 	initialize: function (opts) {
 		this._contentViewOpts = opts.contentViewOptions || {};
 		this._sourceOpts = opts.sources || {};
+        this._isotopeOpts = opts.isotope || {};
         this.$el.addClass(this.className);
 		this.render();
-		this.$el.isotope({
+		this.$el.isotope(_({
 			itemSelector: '.hub-item',
 			isAnimated: true,
-		});
+		}).extend(this._isotopeOpts));
 		this.collection.on('add', this._addItem, this);
 	},
 	render: function () {
