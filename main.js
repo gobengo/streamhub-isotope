@@ -32,13 +32,10 @@ var IsotopeView = Backbone.View.extend(
 		this._sourceOpts = opts.sources || {};
         this._isotopeOpts = opts.isotope || {};
         this.$el.addClass(this.className);
-		this.render();
-		// initialize isotope
-		this.$el.isotope(_({
-			itemSelector: '.hub-item',
-			isAnimated: true,
-		}).extend(this._isotopeOpts));
-		this.collection.on('add', this._addItem, this);
+        this.$el.hide();
+
+        this.collection.on('add', this._addItem, this);
+        this.collection.on('initialDataLoaded', this.render, this);
 	},
 	tagName: "div",
 	className: "hub-IsotopeView",
@@ -48,13 +45,31 @@ var IsotopeView = Backbone.View.extend(
     Render the initial display of the Collection, including
     any initially set Content */
 	render: function () {
+        this.$el.fadeIn();
+        this.$el.prev('.loading-indicator').hide();
+        
+        // init isotope plugin
+        this.$el.isotope(_({
+            itemSelector: '.hub-item',
+            isAnimated: true,
+            getSortData : {
+                index : function( $item ) {
+                    return $item.index();
+                }
+            },
+            sortBy : 'index'
+        }).extend(this._isotopeOpts));
+
 		var self = this;
+		// Insert items
 		this.collection.forEach(function(item) {
 			self._insertItem(item, {})
+            if (self.collection.indexOf(item) == self.collection.length-1) {
+                self.$el.imagesLoaded(function () {
+                   self.$el.isotope('reLayout'); 
+                });
+            }
 		});
-        this.$el.imagesLoaded(function () {
-           self.$el.isotope('reLayout'); 
-        });
 	}
 });
 
@@ -97,7 +112,11 @@ IsotopeView.prototype._insertItem = function (item, opts) {
 	  .addClass('hub-item')
 	  .attr('data-hub-contentId', json.id)
 
-	this.$el.append(newItem);
+	if (this.collection._initialized) {
+        this.$el.prepend(newItem);
+    } else {
+        this.$el.append(newItem);
+    }
 	return newItem;
 }
 
@@ -106,10 +125,14 @@ Add Content to the IsotopeView
 @param {Content} item - A Content model */
 IsotopeView.prototype._addItem = function(item, opts) {
 	var $newItem = this._insertItem(item, opts);
-    if ($newItem) {
+    if (!$newItem) {
+        console.log("DefaultView: Could not create a hub item element to add to container");
+        return;
+    }
+    if (this.collection._started && this.collection._initialized) {
 	    var that = this;
 		$newItem.imagesLoaded(function () {
-	        that.$el.isotope('insert', $newItem, true);
+            that.$el.isotope( 'reloadItems' ).isotope({ sortBy: 'original-order' });
 	    });
     }
 };
