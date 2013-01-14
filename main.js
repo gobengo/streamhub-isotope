@@ -125,6 +125,7 @@ Add Content to the IsotopeView
 @param {Content} item - A Content model */
 IsotopeView.prototype._addItem = function(item, opts) {
 	var $newItem = this._insertItem(item, opts);
+
     if (!$newItem) {
         console.log("DefaultView: Could not create a hub item element to add to container");
         return;
