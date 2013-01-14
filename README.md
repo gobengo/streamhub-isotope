@@ -13,3 +13,7 @@ StreamHub-Isotope is a pluggable View for use with [StreamHub-Backbone](http://g
         el: document.getElementById("example"),
         view: IsotopeView
     }).start();
+
+# Documentation
+
+There is HTML documentation in the `docs/` directory.
