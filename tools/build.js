@@ -1,5 +1,5 @@
 ({
-    baseUrl: ".",
+    baseUrl: "..",
     paths: {
         jquery: 'components/jquery/jquery',
         underscore: 'components/underscore/underscore',
@@ -22,7 +22,7 @@
             exports: '_'
         }
     },
-    name: "almond",
+    name: "tools/almond",
     out: "streamhub-isotope.almond.js",
     include: ['streamhub-isotope'],
 })
