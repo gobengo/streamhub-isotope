@@ -7,24 +7,46 @@ var Backbone = require('backbone'),
 	sources = require('streamhub-backbone/const/sources'),
     _ = require('underscore');
 
-var MasonryView = Backbone.View.extend({
-	tagName: "div",
-	className: "hub-IsotopeView",
-	events: {
-		'all': function () { console.log('MasonryView event', arguments); }
-	},
+var IsotopeView = Backbone.View.extend(
+/** @lends IsotopeView.prototype */
+{
+	/**
+	IsotopeView will render a Collection of Content as a tiled
+	display using jQuery-Isotope
+    @class IsotopeView
+    @param {Collection} opts.collection - A Collection of Content (see models/Collection)
+    @param {Object} opts.contentViewOptions - Options to be passed to any Content Views this instantiates
+           This is useful for passing custom templates for Content
+	@param {Object} opts.sources - An object to configure stuff on a per-source basis
+	       Supports `twitter` and `rss` sub objects with the same opts as this root level
+    @param {Object} opts.isotope - Options to be passed to isotope on instantiation
+	
+    @augments Backbone.View
+    @requires backbone
+    @requires mustache
+
+    @todo allow passing custom contentView
+    */
 	initialize: function (opts) {
 		this._contentViewOpts = opts.contentViewOptions || {};
 		this._sourceOpts = opts.sources || {};
         this._isotopeOpts = opts.isotope || {};
         this.$el.addClass(this.className);
 		this.render();
+		// initialize isotope
 		this.$el.isotope(_({
 			itemSelector: '.hub-item',
 			isAnimated: true,
 		}).extend(this._isotopeOpts));
 		this.collection.on('add', this._addItem, this);
 	},
+	tagName: "div",
+	className: "hub-IsotopeView",
+	events: {
+	},
+	/**
+    Render the initial display of the Collection, including
+    any initially set Content */
 	render: function () {
 		var self = this;
 		this.collection.forEach(function(item) {
@@ -36,7 +58,10 @@ var MasonryView = Backbone.View.extend({
 	}
 });
 
-MasonryView.prototype._insertItem = function (item, opts) {
+/**
+Insert a new ContentView into the DOM
+@param {Content} item - A Content model */
+IsotopeView.prototype._insertItem = function (item, opts) {
 	var self = this,
 	    newItem = $(document.createElement('div')),
 		json = item.toJSON();
@@ -75,7 +100,11 @@ MasonryView.prototype._insertItem = function (item, opts) {
 	this.$el.append(newItem);
 	return newItem;
 }
-MasonryView.prototype._addItem = function(item, opts) {
+
+/**
+Add Content to the IsotopeView
+@param {Content} item - A Content model */
+IsotopeView.prototype._addItem = function(item, opts) {
 	var $newItem = this._insertItem(item, opts);
     if ($newItem) {
 	    var that = this;
@@ -85,11 +114,5 @@ MasonryView.prototype._addItem = function(item, opts) {
     }
 };
 
-MasonryView.prototype._addItem
-
-MasonryView.prototype.go = function () {
-
-}
-
-return MasonryView;
+return IsotopeView;
 });
