@@ -34,6 +34,11 @@ var IsotopeView = Backbone.View.extend(
         this.$el.addClass(this.className);
         this.$el.hide();
 
+        this.initialCount = 0;
+        this.initialNumToDisplay = opts.initialNumToDisplay || null;
+        this.initialDataItems = [];
+        this.finishInitializing = false;
+
         this.collection.on('add', this._addItem, this);
         this.collection.on('initialDataLoaded', this.render, this);
     },
@@ -47,6 +52,22 @@ var IsotopeView = Backbone.View.extend(
     render: function () {
         this.$el.fadeIn();
         this.$el.prev('.loading-indicator').hide();
+        
+        var self = this;
+        if (this.initialNumToDisplay) {
+            self.$el.imagesLoaded(function() {
+                // Add remaining initial data items
+                self.finishInitializing = true;
+                if (self.initialDataItems) {
+                    setTimeout(function() {
+                        for(var i=0; i < self.initialDataItems.length; i++) {
+                            var insertedEl = self._insertItem(self.initialDataItems[i]);
+                            self.$el.isotope('appended', $(insertedEl));
+                        }
+                    }, 1500);
+                }   
+             });
+        }
         
         // init isotope plugin
         this.$el.isotope(_({
@@ -66,7 +87,7 @@ var IsotopeView = Backbone.View.extend(
             self._insertItem(item, {});
             if (self.collection.indexOf(item) == self.collection.length-1) {
                 self.$el.imagesLoaded(function () {
-                   self.$el.isotope('reLayout'); 
+                   self.$el.isotope('reLayout');
                 });
             }
         });
@@ -112,7 +133,7 @@ IsotopeView.prototype._insertItem = function (item, opts) {
       .addClass('hub-item')
       .attr('data-hub-contentId', json.id);
 
-    if (this.collection._initialized) {
+    if (this.collection._initialized && !this.finishInitializing) {
         this.$el.prepend(newItem);
     } else {
         this.$el.append(newItem);
@@ -124,6 +145,16 @@ IsotopeView.prototype._insertItem = function (item, opts) {
 Add Content to the IsotopeView
 @param {Content} item - A Content model */
 IsotopeView.prototype._addItem = function(item, opts) {
+    if (!this.collection._started && this.initialNumToDisplay != null) {
+        if (this.initialCount == this.initialNumToDisplay) {
+            this.initialCount++;
+            return;
+        } else if (this.initialCount > this.initialNumToDisplay) {
+            this.initialDataItems.push(item);
+            return;
+        }
+    }
+
     var $newItem = this._insertItem(item, opts);
 
     if (!$newItem) {
@@ -136,6 +167,7 @@ IsotopeView.prototype._addItem = function(item, opts) {
             that.$el.isotope( 'reloadItems' ).isotope({ sortBy: 'original-order' });
         });
     }
+    this.initialCount++;
 };
 
 return IsotopeView;
