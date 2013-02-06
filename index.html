@@ -22,6 +22,9 @@
         location: 'lib/streamhub-backbone'
       }],
       shim: {
+        fyre: {
+            exports: 'fyre',
+        },
         backbone: {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
@@ -59,38 +62,40 @@
 </head>
 <body>
 <div id="container">
-  <h1>StreamHub Isotope</h1>
-  <div class="sort-links">
-    Sort by: 
-    <a data-sort-key="id">id</a>, 
-    <a data-sort-key="bodyLength">length</a>
-  </div>
-  <div class="filter-links">
-    Filter by: 
-    <a data-filter="">all</a>, 
-    <a data-filter="*[data-hub-hasavatar]">avatars</a>,
-    <a data-filter="*[data-hub-source-id=13]">rss</a>, 
-    <a data-filter="*[data-hub-source-id=1]">tweets</a>, 
-  </div>
+  <h1>StreamHub-Isotope</h1>
   <div id="example">
   </div>
 </div>
 <script type="text/javascript">
+var Config = {
+    network: "labs-t402.fyre.co",
+    siteId: "303827",
+    articleId: "fans_49ers_media",
+    el: document.getElementById('example')
+};
 // Now to load the example
-require(['streamhub-backbone', 'streamhub-isotope'],
-function(Hub, IsotopeView){
+require(['fyre', 'streamhub-backbone', 'streamhub-isotope'],
+function(fyre, Hub, IsotopeView){
     fyre.conv.load({
-        network: "labs-t402.fyre.co"
+        network: Config.network
     }, [{app: 'sdk'}], function loadIsotopeView (sdk) {
-        var app = window.app = new Hub({
+        var mediaCollection = new Hub.Collection(),
+            wallView = new IsotopeView({
+                el: Config.el,
+                collection: mediaCollection,
+                // IsotopeView will load this many Items, wait for their images to load, and then render the rest
+                initialNumToDisplay: 5,
+                // Options to pass to jQuery-Isotope
+                isotope: {},
+                // Options to pass to ContentViews that IsotopeView will create
+                contentViewOptions: {}
+            });
+        // Bind the mediaCollection to a remote one in Streamhub
+        mediaCollection.setRemote({
             sdk: sdk,
-            collection: {
-                siteId: "303827",
-                articleId: "fans_49ers_media"
-            },
-            view: IsotopeView,
-            el: document.getElementById("example")
-        }).start();
+            siteId: Config.siteId,
+            articleId: Config.articleId
+        });
     });
 });
 </script>
