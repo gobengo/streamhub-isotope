@@ -1,0 +1,17 @@
+{
+  "name": "streamhub-isotope",
+  "description": "a pluggable View for use with StreamHub-Backbone. Uses the jQuery-Isotope plugin to lay out Content for a tiled display.",
+  "author": {
+    "name": "Ben Goering"
+  },
+  "version": "1.1.0-alpha.0",
+  "devDependencies": {
+    "bower": "*",
+    "jasmine-node": "*",
+    "jsdoc3": "git://github.com/jsdoc3/jsdoc.git#v3.1.0"
+  },
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install",
+    "doc": "rm -rf docs && ./node_modules/jsdoc/jsdoc -c tools/jsdoc.conf.json main.js README.md -d docs"
+  }
+}
