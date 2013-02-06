@@ -9,17 +9,36 @@ StreamHub-Isotope is a pluggable View for use with [StreamHub-Backbone](http://g
 [StreamHub-Backbone](http://gobengo.github.com/streamhub-backbone/) displays Collections of Content in StreamHub Networks. To get your own Network so you can create your own Collections, engage your own community of SSO Users, and curate Content that appeals to your users, [contact Livefyre](http://www.livefyre.com/streamhub/) about subscribing to StreamHub.
 
 
-# Example Usage
+# Usage
 
-    var app = new Hub({
-        sdk: livefyreSdk,
-        collection: {
-            siteId: "303772",
-            articleId: "prod0"
-        },
-        el: document.getElementById("example"),
-        view: IsotopeView
-    }).start();
+    // Load a Livefyre JS App
+    fyre.conv.load({
+        network: Config.network
+    },
+    // specifically, the 'sdk' App
+    [{app: 'sdk'}],
+    
+    function loadIsotopeView (sdk) {
+        // Create a Collection and a View
+        var mediaCollection = new Hub.Collection(),
+            wallView = new IsotopeView({
+                el: Config.el,
+                collection: mediaCollection,
+                // load this many items, wait for their
+                // images to load, then render the rest
+                initialNumToDisplay: 5,
+                // Options to pass to jQuery-Isotope
+                isotope: {}
+            });
+            
+        // Bind the mediaCollection to a remote source
+        mediaCollection.setRemote({
+            sdk: sdk,
+            siteId: Config.siteId,
+                articleId: Config.articleId
+            });
+        });
+    });
 
 # Using It
 
