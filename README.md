@@ -10,6 +10,7 @@ StreamHub-Isotope is a pluggable View for use with [StreamHub-Backbone](http://g
 
 
 # Usage
+StreamHub-Isotope presents itself as the `IsotopeView` constructor. It is an extension of Backbone.View, and is instantiated with a `Hub.Collection()`, `el`, and some other options.
 
     // Load a Livefyre JS App
     fyre.conv.load({
@@ -40,7 +41,7 @@ StreamHub-Isotope is a pluggable View for use with [StreamHub-Backbone](http://g
         });
     });
 
-# Using It
+# Getting Started
 
 [Bower](http://twitter.github.com/bower/) is used for dependency management. You can install the dependencies with
 
