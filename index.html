@@ -2,24 +2,24 @@
 <html>
 <head>
     <title>StreamHub Backbone Example</title>
-    <script src="components/requirejs/require.js"
+    <script src="lib/requirejs/require.js"
             type="text/javascript"></script>
-    <script src="http://zor.t402.livefyre.com/wjs/v3.0.sdk/javascripts/livefyre.js"></script>
     <script type="text/javascript">
     // Require.js Config
     require.config({
       paths: {
-        jquery: 'components/jquery/jquery',
-        isotope: 'components/isotope/jquery.isotope',
-        underscore: 'components/underscore/underscore',
-        backbone: 'components/backbone/backbone',
+        jquery: 'lib/jquery/jquery',
+        isotope: 'lib/isotope/jquery.isotope',
+        underscore: 'lib/underscore/underscore',
+        backbone: 'lib/backbone/backbone',
         "streamhub-isotope": "main",
-        mustache: 'components/mustache/mustache',
-        text: 'components/requirejs-text/text'
+        mustache: 'lib/mustache/mustache',
+        text: 'lib/requirejs-text/text',
+        fyre: 'http://zor.t402.livefyre.com/wjs/v3.0/javascripts/livefyre'
       },
       packages: [{
         name: 'streamhub-backbone',
-        location: 'components/streamhub-backbone'
+        location: 'lib/streamhub-backbone'
       }],
       shim: {
         backbone: {
@@ -35,7 +35,7 @@
       }
     });
     </script>
-    <link rel="stylesheet" type="text/css" href="components/streamhub-backbone/main.css">
+    <link rel="stylesheet" type="text/css" href="lib/streamhub-backbone/main.css">
     <link rel="stylesheet" type="text/css" href="main.css">
     <style>
     body {
@@ -56,20 +56,6 @@
         text-decoration: underline;
     }
     </style>
-    <script>
-    require(['jquery'], function($) {
-        $(function($) {
-            $('.sort-links a').on('click', function (e) {
-                app._view.$el.isotope({ sortBy: $(this).attr('data-sort-key') });
-            });
-            $('.filter-links a').on('click', function (e) {
-                app._view.$el.isotope({
-                    filter: $(this).attr('data-filter')
-                })
-            })
-        });
-    })
-    </script>
 </head>
 <body>
 <div id="container">
@@ -93,20 +79,19 @@
 // Now to load the example
 require(['streamhub-backbone', 'streamhub-isotope'],
 function(Hub, IsotopeView){
-    function loadApp (sdk) {
+    fyre.conv.load({
+        network: "labs-t402.fyre.co"
+    }, [{app: 'sdk'}], function loadIsotopeView (sdk) {
         var app = window.app = new Hub({
             sdk: sdk,
             collection: {
-                siteId: "303772",
-                articleId: "prod0"
+                siteId: "303827",
+                articleId: "fans_49ers_media"
             },
             view: IsotopeView,
             el: document.getElementById("example")
         }).start();
-    }
-    fyre.conv.load({
-        network: "largetail-0.fyre.co"
-    }, [{app: 'sdk'}], loadApp);
+    });
 });
 </script>
 </body>
