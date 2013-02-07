@@ -1,11 +1,8 @@
-/**
- * I run the test suite
- */
-define('streamhub-isotope-tests', function(require) {
-	var jasmine = require('jasmine-html'),
-		jasminejQuery = require('jasmine-jquery'),
-		$ = require('jquery');
-
+require([
+	'jasmine-html',
+	'jasmine-jquery',
+	'jquery'],
+function (jasmine, jasmineJQuery, $) {
 	// Test!
 	var jasmineEnv = jasmine.getEnv();
 	jasmineEnv.updateInterval = 1000;

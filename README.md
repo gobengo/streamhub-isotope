@@ -65,11 +65,19 @@ Then you can use it like:
     })
 
 # Documentation
+You can access the API Reference [on GitHub](http://gobengo.github.com/streamhub-isotope/docs)
 
-There is HTML documentation in the `docs/` directory. You can view them in your browser with:
+The API reference also lives in the `docs/` directory. You can view them in your browser with:
 
     open docs/index.html
 
 You can re-build the documentation using:
 
     npm run-script doc
+
+# Tests
+Behavior tests are included in the `tests/spec` directory. You can access an online test runner for the latest release [on GitHub](http://gobengo.github.com/streamhub-isotope/tests).
+
+You can also run the tests via:
+
+    npm test

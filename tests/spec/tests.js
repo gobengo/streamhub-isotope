@@ -3,12 +3,13 @@ describe('Test', function () {
     it ("Can have tests run", function () {
         expect(true).toBe(true);
     });
-    it("Can do HTML tests",function(){  
-        setFixtures('<div id="hub"></container>');  
-        $('#hub')
+    it("Can do HTML tests",function(){
+        var domId = 'hub-IsotopeView';
+        setFixtures('<div id="'+domId+'"></container>');  
+        $('#'+domId)
             .append('<li>So</li>')
             .append('<li>So</li>');
-        expect($('#hub li').length).toBe(2);  
+        expect($('#'+domId + ' li').length).toBe(2);  
     });
 }); 
 });

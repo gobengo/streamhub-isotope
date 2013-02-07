@@ -2,42 +2,6 @@
 <html>
 <head>
     <title>StreamHub-Isotope Example</title>
-    <script src="lib/requirejs/require.js"
-            type="text/javascript"></script>
-    <script type="text/javascript">
-    // Require.js Config
-    require.config({
-      paths: {
-        jquery: 'lib/jquery/jquery',
-        isotope: 'lib/isotope/jquery.isotope',
-        underscore: 'lib/underscore/underscore',
-        backbone: 'lib/backbone/backbone',
-        "streamhub-isotope": "main",
-        mustache: 'lib/mustache/mustache',
-        text: 'lib/requirejs-text/text',
-        fyre: 'http://zor.t402.livefyre.com/wjs/v3.0/javascripts/livefyre'
-      },
-      packages: [{
-        name: 'streamhub-backbone',
-        location: 'lib/streamhub-backbone'
-      }],
-      shim: {
-        fyre: {
-            exports: 'fyre',
-        },
-        backbone: {
-            deps: ['underscore', 'jquery'],
-            exports: 'Backbone'
-        },
-        isotope: {
-            deps: ['jquery']
-        },
-        underscore: {
-            exports: '_'
-        }
-      }
-    });
-    </script>
     <link rel="stylesheet" type="text/css" href="lib/streamhub-backbone/main.css">
     <link rel="stylesheet" type="text/css" href="main.css">
     <style>
@@ -66,6 +30,9 @@
   <div id="example">
   </div>
 </div>
+<!-- Scripts -->
+<script src="lib/requirejs/require.js"
+        type="text/javascript"></script>
 <script type="text/javascript">
 var Config = {
     network: "labs-t402.fyre.co",
@@ -73,8 +40,10 @@ var Config = {
     articleId: "fans_49ers_media",
     el: document.getElementById('example')
 };
-// Now to load the example
-require(['fyre', 'streamhub-backbone', 'streamhub-isotope'],
+require(['requirejs.conf'], function () { require([
+    'fyre',
+    'streamhub-backbone',
+    'streamhub-isotope'],
 function(fyre, Hub, IsotopeView){
     fyre.conv.load({
         network: Config.network
@@ -95,6 +64,7 @@ function(fyre, Hub, IsotopeView){
             articleId: Config.articleId
         });
     });
+});
 });
 </script>
 </body>
