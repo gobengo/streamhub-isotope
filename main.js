@@ -1,16 +1,8 @@
-define('streamhub-isotope',
 /**
- * @module streamhub-isotope
- * @requires backbone
- * @requires mustache
- * @requires isotope
- * @requires ContentView
- * @requires ContentTemplate
- * @requires sources
- * @requires underscore
+ * @module IsotopeView
  * @author Benjamin Goering - https://github.com/gobengo
  */
-function(require) {
+define('IsotopeView', function(require) {
 var Backbone = require('backbone'),
     Mustache = require('mustache'),
     isotope = require('isotope'),
@@ -19,27 +11,29 @@ var Backbone = require('backbone'),
     sources = require('streamhub-backbone/const/sources'),
     _ = require('underscore');
 
-
 /**
-IsotopeView, a pluggable View for creating tiled layouts and media walls
-@class IsotopeView
-@constructor
-@alias module:streamhub-isotope
-@augments Backbone.View
-@param {Object} opts - Options
-@param {Collection} opts.collection - A Collection of Content (see models/Collection)
-@param {Object} opts.contentViewOptions - Options to be passed to any Content Views this instantiates
-       This is useful for passing custom templates for Content
-@param {Object} opts.sources - An object to configure stuff on a per-source basis
-       Supports `twitter` and `rss` sub objects with the same opts as this root level
-@param {Object} opts.isotope - Options to be passed to isotope on instantiation
-*/
-var IsotopeView = Backbone.View.extend(
-/** @lends IsotopeView.prototype */
-{
+ * IsotopeView, a pluggable View for creating tiled layouts and media walls
+ * @constructor
+ * @class IsotopeView
+ * @alias module:IsotopeView
+ * @augments Backbone.View
+ * @param {Object} opts - Options
+ * @param {Collection} opts.collection - A `Hub.Collection` of `Content`
+ * @param {Object} opts.contentViewOptions - Options to be passed to any `Content` Views this instantiates
+ *        This is useful for passing custom templates for Content
+ * @param {Object} opts.sources - An object to configure stuff on a per-source basis
+ *        Supports `twitter` and `rss` sub objects with the same opts as this root level
+ * @param {Object} opts.isotope - Options to be passed to isotope on instantiation
+ */
+var IsotopeView = Backbone.View.extend({
+
     /**
-    @todo allow passing custom contentView
-    */
+     * initializes an `IsotopeView`, and is called automatically on construction
+     * @param {Object} opts - Options to construct with
+     * @see module:IsotopeView
+     * @protected
+     * @todo allow passing custom contentView
+     */
     initialize: function (opts) {
         this._contentViewOpts = opts.contentViewOptions || {};
         this._sourceOpts = opts.sources || {};
@@ -55,18 +49,27 @@ var IsotopeView = Backbone.View.extend(
         this.collection.on('add', this._addItem, this);
         this.collection.on('initialDataLoaded', this.render, this);
     },
-    tagName: "div",
-    className: "hub-IsotopeView",
-    events: {
-    },
+
     /**
-    Render the initial display of the Collection, including
-    any initially set Content */
+     * @property {String} The default HTML Element to use for this View
+     * @default hub-IsotopeView
+     */
+    tagName: "div",
+
+    /**
+     * @property {String} The CSS class that should be added to this View's containing Element
+     * @default hub-IsotopeView
+     */
+    className: "hub-IsotopeView",
+
+    /**
+     * Render the initial display of the Collection, including
+     *     any initially set Content
+     * @public
+     */
     render: function () {
-        this.$el.fadeIn();
-        this.$el.prev('.loading-indicator').hide();
-        
         var self = this;
+
         if (this.initialNumToDisplay) {
             self.$el.imagesLoaded(function() {
                 // Add remaining initial data items
