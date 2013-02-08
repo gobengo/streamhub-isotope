@@ -2,7 +2,7 @@
  * @module IsotopeView
  * @author Benjamin Goering - https://github.com/gobengo
  */
-define('IsotopeView', function(require) {
+define(function(require) {
 var Backbone = require('backbone'),
     Mustache = require('mustache'),
     isotope = require('isotope'),
@@ -70,6 +70,8 @@ var IsotopeView = Backbone.View.extend({
     render: function () {
         var self = this;
 
+        this.$el.addClass(this.className);
+        
         if (this.initialNumToDisplay) {
             self.$el.imagesLoaded(function() {
                 // Add remaining initial data items

@@ -4,41 +4,107 @@ define([
     'streamhub-backbone'],
 function (jasmine, IsotopeView, Hub) {
 describe('IsotopeView', function () {
-    it ("Can be constructed with empty options", function () {
-        var view = new IsotopeView({});
-        expect(view).toBeDefined();
+    
+    it ("throws if constructed without a Hub.Collection", function () {
+        expect(function () {
+            new IsotopeView();
+        }).toThrow();
+        expect(function () {
+            new IsotopeView({});
+        }).toThrow();
+        expect(function () {
+            new IsotopeView({
+                collection: []
+            });
+        }).toThrow();
     });
-    it ("Can be constructed with only a Hub.Collection", function () {
-        var view = new IsotopeView({
-            collection: new Hub.Collection()
+
+    describe ("when constructed with only a Hub.Collection", function () {
+        var view;
+        beforeEach(function () {
+            this.view = new IsotopeView({
+                collection: new Hub.Collection()
+            });
         });
-        expect(view).toBeDefined();
-    });
-    it ("Can be constructed with an el", function () {
-        setFixtures('<div id="hub-IsotopeView"></container>');  
-        var view = new IsotopeView({
-            el: $('#hub-IsotopeView')
+        it ("is defined", function () {
+            expect(this.view).toBeDefined();
         });
-        expect(view).toBeDefined();
+        it ("has an el that is not in the DOM", function () {
+            expect($(document).find(this.view.el).length).toBe(0);
+        });
+        it ("has an .el with the correct .className", function () {
+            var view = this.view;
+            expect(view.$el.is('.'+view.className)).toBe(true);
+        });
+        describe ("when .setElement is later called", function () {
+            beforeEach(function () {
+                setFixtures('<div id="env"></div>');
+                this.view.setElement($('#env'));
+            });
+            it ("has an el in the DOM", function () {
+                expect($(document).find(this.view.el).length).toBe(1);
+            });
+            describe ("when .render is called", renderView);
+        });
     });
-    it ("Can be constructed with an el and collection", function () {
-        var view = new IsotopeView();
-        expect(view).toBeDefined();
+
+    describe ("when constructed with an .el and a Hub.Collection", function () {
+        beforeEach(function () {
+            setFixtures('<div id="env"></div>');
+            this.view = new IsotopeView({
+                collection: new Hub.Collection(),
+                el: $('#env')
+            });
+        });
+        it ("is defined", function () {
+            expect(this.view).toBeDefined();
+        });
+        it ("has an element that is in the DOM", function () {
+            expect($(document).find(this.view.el).length).toBe(1);
+        });
+        describe ("when .render is called", renderView);
     });
-    it ("Can have tests run", function () {
-        expect(true).toBe(true);
-    });
+
+    function renderView () {
+        beforeEach(function () {
+            this.view.render();
+        });
+        it ("has a .el with the correct .className", function () {
+            expect(this.view.$el.is('.'+this.view.className)).toBe(true);
+        });
+    }
+
     describe ("when .collection.setRemote is called after construction", function () {
-        it ("should display data from the remote Collection", function () {
-            return false;
+        xit ("should display data from the remote Collection", function () {
         });
     });
-    it("Can do HTML tests",function(){  
-        setFixtures('<div id="hub"></container>');  
-        $('#hub')
-            .append('<li>So</li>')
-            .append('<li>So</li>');
-        expect($('#hub li').length).toBe(2);  
+
+    xdescribe ("when constructed using the initialNumToDisplay option", function () {
+        beforeEach(function () {
+            setFixtures('<div id="env"></div>');
+            this.view = new IsotopeView({
+                el: $('#env'),
+                collection: new Hub.Collection(),
+                initialNumToDisplay: 5
+            });
+        });
+        describe ("when rendered", function () {
+            it ("only has N images on first imagesLoaded event", function () {
+                var initialImagesLoaded = false;
+                runs(function () {
+                    this.view.render();
+                    this.view.$el.imagesLoaded(function () {
+                        initialImagesLoaded = true;
+                    });
+                });
+                waitsFor(function () {
+                    return initialImagesLoaded;
+                });
+                runs(function () {
+                    // check for only that many images?
+                });
+            });
+        });
     });
 }); 
 });

@@ -10,8 +10,9 @@
             data-main="../requirejs.conf"
             type="text/javascript"></script>
 <script type="text/javascript">
-// Now to load the example
-require(['test.js']);
+require(['../requirejs.conf'], function () {
+	require(['test.js']);	
+})
 </script>
 </body>
 </html>
