@@ -1,0 +1,18 @@
+{
+  "name": "StreamHub-Isotope Landing Page",
+  "version": "0.0.0",
+  "main": [
+    "www/src/main.js",
+    "www/css/style.css"
+  ],
+  "dependencies": {
+    "jquery": ">1.7",
+    "requirejs": "~2.1.2",
+    "requirejs-text": "*",
+    "backbone": "~0.9.9",
+    "underscore": "~1.4.3",
+    "mustache": "~0.7.2",
+    "streamhub-backbone": "v1.1.0-alpha.4",
+    "streamhub-isotope": "git://github.com/gobengo/streamhub-isotope.git"
+  }
+}
