@@ -1,41 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>StreamHub Backbone Example</title>
-    <script src="components/requirejs/require.js"
-            type="text/javascript"></script>
-    <script src="http://zor.t402.livefyre.com/wjs/v3.0.sdk/javascripts/livefyre.js"></script>
-    <script type="text/javascript">
-    // Require.js Config
-    require.config({
-      paths: {
-        jquery: 'components/jquery/jquery',
-        isotope: 'components/isotope/jquery.isotope',
-        underscore: 'components/underscore/underscore',
-        backbone: 'components/backbone/backbone',
-        "streamhub-isotope": "main",
-        mustache: 'components/mustache/mustache',
-        text: 'components/requirejs-text/text'
-      },
-      packages: [{
-        name: 'streamhub-backbone',
-        location: 'components/streamhub-backbone'
-      }],
-      shim: {
-        backbone: {
-            deps: ['underscore', 'jquery'],
-            exports: 'Backbone'
-        },
-        isotope: {
-            deps: ['jquery']
-        },
-        underscore: {
-            exports: '_'
-        }
-      }
-    });
-    </script>
-    <link rel="stylesheet" type="text/css" href="components/streamhub-backbone/main.css">
+    <title>StreamHub-Isotope Example</title>
+    <link rel="stylesheet" type="text/css" href="lib/streamhub-backbone/main.css">
     <link rel="stylesheet" type="text/css" href="main.css">
     <style>
     body {
@@ -56,57 +23,48 @@
         text-decoration: underline;
     }
     </style>
-    <script>
-    require(['jquery'], function($) {
-        $(function($) {
-            $('.sort-links a').on('click', function (e) {
-                app._view.$el.isotope({ sortBy: $(this).attr('data-sort-key') });
-            });
-            $('.filter-links a').on('click', function (e) {
-                app._view.$el.isotope({
-                    filter: $(this).attr('data-filter')
-                })
-            })
-        });
-    })
-    </script>
 </head>
 <body>
 <div id="container">
-  <h1>StreamHub Isotope</h1>
-  <div class="sort-links">
-    Sort by: 
-    <a data-sort-key="id">id</a>, 
-    <a data-sort-key="bodyLength">length</a>
-  </div>
-  <div class="filter-links">
-    Filter by: 
-    <a data-filter="">all</a>, 
-    <a data-filter="*[data-hub-hasavatar]">avatars</a>,
-    <a data-filter="*[data-hub-source-id=13]">rss</a>, 
-    <a data-filter="*[data-hub-source-id=1]">tweets</a>, 
-  </div>
+  <h1>StreamHub-Isotope</h1>
   <div id="example">
   </div>
 </div>
+<!-- Scripts -->
+<script src="lib/requirejs/require.js"
+        type="text/javascript"></script>
 <script type="text/javascript">
-// Now to load the example
-require(['streamhub-backbone', 'streamhub-isotope'],
-function(Hub, IsotopeView){
-    function loadApp (sdk) {
-        var app = window.app = new Hub({
-            sdk: sdk,
-            collection: {
-                siteId: "303772",
-                articleId: "prod0"
-            },
-            view: IsotopeView,
-            el: document.getElementById("example")
-        }).start();
-    }
+var Config = {
+    network: "labs-t402.fyre.co",
+    siteId: "303827",
+    articleId: "fans_49ers_media",
+    el: document.getElementById('example')
+};
+require(['requirejs.conf'], function () { require([
+    'fyre',
+    'streamhub-backbone',
+    'streamhub-isotope'],
+function(fyre, Hub, IsotopeView){
     fyre.conv.load({
-        network: "largetail-0.fyre.co"
-    }, [{app: 'sdk'}], loadApp);
+        network: Config.network
+    }, [{app: 'sdk'}], function loadIsotopeView (sdk) {
+        var mediaCollection = new Hub.Collection(),
+            wallView = new IsotopeView({
+                el: Config.el,
+                collection: mediaCollection,
+                // IsotopeView will load this many Items, wait for their images to load, and then render the rest
+                initialNumToDisplay: 5,
+                // Options to pass to jQuery-Isotope
+                isotope: {}
+            });
+        // Bind the mediaCollection to a remote one in Streamhub
+        mediaCollection.setRemote({
+            sdk: sdk,
+            siteId: Config.siteId,
+            articleId: Config.articleId
+        });
+    });
+});
 });
 </script>
 </body>
