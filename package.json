@@ -8,11 +8,13 @@
   "devDependencies": {
     "bower": "*",
     "jasmine-node": "*",
-    "jsdoc3": "git://github.com/jsdoc3/jsdoc.git#v3.1.0"
+    "jsdoc3": "git://github.com/jsdoc3/jsdoc.git#v3.1.0",
+    "jshint": "*"
   },
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install",
     "doc": "rm -rf docs && ./node_modules/jsdoc/jsdoc -c tools/jsdoc.conf.json main.js README.md -d docs",
-    "test": "open tests/index.html"
+    "test": "open tests/index.html",
+    "hint": "./node_modules/jshint/bin/hint main.js tests/test.js tests/spec/*"
   }
 }
