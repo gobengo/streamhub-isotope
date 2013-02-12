@@ -9,7 +9,7 @@
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
 
@@ -41,44 +41,98 @@
 
 
     <section>
-        <article><p>StreamHub-Isotope is a pluggable View for use with <a href="http://gobengo.github.com/streamhub-backbone/">StreamHub-Backbone</a>. It will use the <a href="https://github.com/desandro/isotope">jQuery Isotope</a> plugin to lay out Content for a tiled display.</p>
+        <article><p>StreamHub-Isotope is a pluggable View for use with <a href="http://gobengo.github.com/streamhub-backbone/">StreamHub-Backbone</a>. It will use the <a href="https://github.com/desandro/isotope">jQuery Isotope</a> plugin to lay out Content for a tiled display that are perfect for media wall experiences.</p>
 
-<p><img alt="StreamHub-Isotope Screenshot" src="http://d.pr/i/n6CC+"/></p>
+<p><img src="http://d.pr/i/n6CC+" alt="StreamHub-Isotope Screenshot" height="300px"/></p>
 
-<h1>Example Usage</h1>
+<p><img src="http://d.pr/i/3Ilj+" alt="StreamHub-Isotope on Super Bowl Hub" height="300px" /></p>
 
-<pre><code>var app = new Hub({
-    sdk: livefyreSdk,
-    collection: {
-        siteId: &quot;303772&quot;,
-        articleId: &quot;prod0&quot;
-    },
-    el: document.getElementById(&quot;example&quot;),
-    view: IsotopeView
-}).start();</code></pre>
+<p><a href="http://www.livefyre.com/streamhub/">Livefyre StreamHub</a> is the web's first Engagement Management System. StreamHub turns your site into a real-time social experience. Curate images, videos, and Tweets from across the social web, right into live blogs, chats, widgets, and dashboards. The world's biggest publishers and brands use StreamHub to power their online Content Communities.</p>
 
-<h1>Using It</h1>
+<p><a href="http://gobengo.github.com/streamhub-backbone/">StreamHub-Backbone</a> displays Collections of Content in StreamHub Networks. To get your own Network so you can create your own Collections, engage your own community of SSO Users, and curate Content that appeals to your users, <a href="http://www.livefyre.com/streamhub/">contact Livefyre</a> about subscribing to StreamHub.</p>
 
-<p><a href="http://twitter.github.com/bower/">Bower</a> is used for dependency management. You can install the dependencies with</p>
+<h1>Usage</h1>
 
-<pre><code>bower install</code></pre>
+<p>StreamHub-Isotope presents itself as the <code>IsotopeView</code> constructor. It is an extension of Backbone.View, and is instantiated with a <code>Hub.Collection()</code>, <code>el</code>, and some other options.</p>
+
+<pre><code>// Load a Livefyre JS App
+fyre.conv.load({
+    network: Config.network
+},
+// specifically, the 'sdk' App
+[{app: 'sdk'}],
+
+function loadIsotopeView (sdk) {
+    // Create a Collection and a View
+    var mediaCollection = new Hub.Collection(),
+        wallView = new IsotopeView({
+            el: Config.el,
+            collection: mediaCollection,
+            // load this many items, wait for their
+            // images to load, then render the rest
+            initialNumToDisplay: 5,
+            // Options to pass to jQuery-Isotope
+            isotope: {}
+        });
+
+    // Bind the mediaCollection to a remote source
+    mediaCollection.setRemote({
+        sdk: sdk,
+        siteId: Config.siteId,
+            articleId: Config.articleId
+        });
+    });
+});
+</code></pre>
+
+<h1>Getting Started</h1>
+
+<p>Install npm</p>
+
+<p>Use npm to install this package</p>
+
+<pre><code>npm install
+</code></pre>
+
+<p><a href="http://twitter.github.com/bower/">Bower</a> is used for dependency management. The npm postinstall script will run <code>bower install</code> and put dependencies in <code>lib/</code>.</p>
 
 <p>StreamHub-Isotope is written as an <a href="http://requirejs.org/docs/whyamd.html">AMD</a> module. You will need to use an AMD loader like <a href="http://requirejs.org/">RequireJS</a> to use it. Add it as a package in your RequireJS config:</p>
 
 <pre><code>packages: [{
-    name: &#39;streamhub-isotope&#39;,
-    location: &#39;./path/to/streamhub-isotope&#39;
-}]</code></pre>
+    name: 'streamhub-isotope',
+    location: './path/to/streamhub-isotope'
+}]
+</code></pre>
 
 <p>Then you can use it like:</p>
 
-<pre><code>require([&#39;streamhub-isotope&#39;], function (IsotopeView) {
+<pre><code>require(['streamhub-isotope'], function (IsotopeView) {
     // Hub some Streams, yo
-})</code></pre>
+})
+</code></pre>
 
 <h1>Documentation</h1>
 
-<p>There is HTML documentation in the <code>docs/</code> directory.</p></article>
+<p>You can access the API Reference <a href="http://gobengo.github.com/streamhub-isotope/docs">on GitHub</a></p>
+
+<p>The API reference also lives in the <code>docs/</code> directory. You can view them in your browser with:</p>
+
+<pre><code>open docs/index.html
+</code></pre>
+
+<p>You can re-build the documentation using:</p>
+
+<pre><code>npm run-script doc
+</code></pre>
+
+<h1>Tests</h1>
+
+<p>Behavior tests are included in the <code>tests/spec</code> directory. You can access an online test runner for the latest release <a href="http://gobengo.github.com/streamhub-isotope/tests">on GitHub</a>.</p>
+
+<p>You can also run the tests via:</p>
+
+<pre><code>npm test
+</code></pre></article>
     </section>
 
 
@@ -89,13 +143,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="IsotopeView.html">IsotopeView</a></li></ul>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-IsotopeView.html">IsotopeView</a></li></ul></ul>
 </nav>
 
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3</a> on Mon Jan 14 2013 02:44:40 GMT-0800 (PST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.1.0</a> on Mon Feb 11 2013 23:34:30 GMT-0800 (PST)
 </footer>
 
 <script> prettyPrint(); </script>
