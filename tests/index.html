@@ -7,10 +7,12 @@
 <body>
 <!-- Scripts -->
 <script src="../lib/requirejs/require.js"
-            data-main="../requirejs.conf"
             type="text/javascript"></script>
 <script type="text/javascript">
 require(['../requirejs.conf'], function () {
+	require.config({
+		baseUrl: '..'
+	})
 	require(['test.js']);	
 })
 </script>
