@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Streamhub-isotope by gobengo</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Streamhub-Isotope</h1>
+        <p>Create tiled media displays with Livefyre StreamHub and jQuery Isotope</p>
+
+        <p class="view"><a href="https://github.com/gobengo/streamhub-isotope">View the Project on GitHub <small>gobengo/streamhub-isotope</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/gobengo/streamhub-isotope/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/gobengo/streamhub-isotope/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/gobengo/streamhub-isotope">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>StreamHub-Isotope is a pluggable View for use with <a href="http://gobengo.github.com/streamhub-backbone/">StreamHub-Backbone</a>. It will use the <a href="https://github.com/desandro/isotope">jQuery Isotope</a> plugin to lay out Content for a tiled display that are perfect for media wall experiences.</p>
+
+<p><img src="http://d.pr/i/n6CC+" alt="StreamHub-Isotope Screenshot" height="300"></p>
+
+<!-- EXAMPLE -->
+<h1>Live Example</h1>
+<link rel="stylesheet" href="javascripts/lib/streamhub-isotope/main.css">
+<style>
+#example-container {
+  height: 400px;
+  overflow-y: auto;
+  margin-bottom: 1em;
+}
+.hub-IsotopeView {
+
+}
+.hub-IsotopeView .hub-item {
+  width: 20%;
+  padding: 0;
+}
+.hub-IsotopeView .hub-item .hub-heading,
+.hub-IsotopeView .hub-item .hub-body-html {
+  display: none;
+}
+</style>
+<div id="example-container">
+  <div id="example"></div>
+</div>
+<script src="javascripts/lib/requirejs/require.js"
+        data-main="javascripts/main"></script>
+<!-- /EXAMPLE -->
+<p><a href="http://www.livefyre.com/streamhub/">Livefyre StreamHub</a> is the web's first Engagement Management System. StreamHub turns your site into a real-time social experience. Curate images, videos, and Tweets from across the social web, right into live blogs, chats, widgets, and dashboards. The world's biggest publishers and brands use StreamHub to power their online Content Communities.</p>
+
+<p><a href="http://gobengo.github.com/streamhub-backbone/">StreamHub-Backbone</a> displays Collections of Content in StreamHub Networks. To get your own Network so you can create your own Collections, engage your own community of SSO Users, and curate Content that appeals to your users, <a href="http://www.livefyre.com/streamhub/">contact Livefyre</a> about subscribing to StreamHub.</p>
+
+<h1>Usage</h1>
+
+<p>StreamHub-Isotope presents itself as the <code>IsotopeView</code> constructor. It is an extension of Backbone.View, and is instantiated with a <code>Hub.Collection()</code>, <code>el</code>, and some other options.</p>
+
+<pre><code>// Load a Livefyre JS App
+fyre.conv.load({
+    network: Config.network
+},
+// specifically, the 'sdk' App
+[{app: 'sdk'}],
+
+function loadIsotopeView (sdk) {
+    // Create a Collection and a View
+    var mediaCollection = new Hub.Collection(),
+        wallView = new IsotopeView({
+            el: Config.el,
+            collection: mediaCollection,
+            // load this many items, wait for their
+            // images to load, then render the rest
+            initialNumToDisplay: 5,
+            // Options to pass to jQuery-Isotope
+            isotope: {}
+        });
+
+    // Bind the mediaCollection to a remote source
+    mediaCollection.setRemote({
+        sdk: sdk,
+        siteId: Config.siteId,
+            articleId: Config.articleId
+        });
+    });
+});
+</code></pre>
+
+<h1>Getting Started</h1>
+
+<p>Install npm</p>
+
+<p>Use npm to install this package</p>
+
+<pre><code>npm install
+</code></pre>
+
+<p><a href="http://twitter.github.com/bower/">Bower</a> is used for dependency management. The npm postinstall script will run <code>bower install</code> and put dependencies in <code>lib/</code>.</p>
+
+<p>StreamHub-Isotope is written as an <a href="http://requirejs.org/docs/whyamd.html">AMD</a> module. You will need to use an AMD loader like <a href="http://requirejs.org/">RequireJS</a> to use it. Add it as a package in your RequireJS config:</p>
+
+<pre><code>packages: [{
+    name: 'streamhub-isotope',
+    location: './path/to/streamhub-isotope'
+}]
+</code></pre>
+
+<p>Then you can use it like:</p>
+
+<pre><code>require(['streamhub-isotope'], function (IsotopeView) {
+    // Hub some Streams, yo
+})
+</code></pre>
+
+<h1>Documentation</h1>
+
+<p>You can access the API Reference <a href="http://gobengo.github.com/streamhub-isotope/docs">on GitHub</a></p>
+
+<p>The API reference also lives in the <code>docs/</code> directory. You can view them in your browser with:</p>
+
+<pre><code>open docs/index.html
+</code></pre>
+
+<p>You can re-build the documentation using:</p>
+
+<pre><code>npm run-script doc
+</code></pre>
+
+<h1>Tests</h1>
+
+<p>Behavior tests are included in the <code>tests/spec</code> directory. You can access an online test runner for the latest release <a href="http://gobengo.github.com/streamhub-isotope/tests">on GitHub</a>.</p>
+
+<p>You can also run the tests via:</p>
+
+<pre><code>npm test
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/gobengo">gobengo</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-38120262-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
