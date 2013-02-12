@@ -12,7 +12,7 @@
     "backbone": "~0.9.9",
     "underscore": "~1.4.3",
     "mustache": "~0.7.2",
-    "streamhub-backbone": "v1.1.0-alpha.4",
+    "streamhub-backbone": "git://github.com/gobengo/streamhub-backbone.git",
     "streamhub-isotope": "git://github.com/gobengo/streamhub-isotope.git"
   }
 }
