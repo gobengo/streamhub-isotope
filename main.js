@@ -39,7 +39,6 @@ var IsotopeView = Backbone.View.extend({
         this._sourceOpts = opts.sources || {};
         this._isotopeOpts = opts.isotope || {};
         this.$el.addClass(this.className);
-        this.$el.hide();
 
         this.initialCount = 0;
         this.initialNumToDisplay = opts.initialNumToDisplay || null;
@@ -48,6 +47,7 @@ var IsotopeView = Backbone.View.extend({
 
         this.collection.on('add', this._addItem, this);
         this.collection.on('initialDataLoaded', this.render, this);
+        return this;
     },
 
     /**
@@ -103,7 +103,6 @@ var IsotopeView = Backbone.View.extend({
         });
         // Initialize the jQuery-Isotope plugin
         this.$el.isotope(isotopeOptions);
-
         // Render Items already in the Collection
         this.collection.forEach(function(item) {
             self._insertItem(item, {});
@@ -113,6 +112,8 @@ var IsotopeView = Backbone.View.extend({
                 });
             }
         });
+
+        return this;
     }
 });
 
@@ -138,12 +139,12 @@ IsotopeView.prototype._addItem = function(item, opts) {
         console.log("DefaultView: Could not create a hub item element to add to container");
         return;
     }
-    if (this.collection._started && this.collection._initialized) {
-        var that = this;
-        $newItem.imagesLoaded(function () {
-            that.$el.isotope( 'reloadItems' ).isotope({ sortBy: 'original-order' });
-        });
-    }
+
+    var that = this;
+    $newItem.imagesLoaded(function () {
+        that.$el.isotope( 'reloadItems' ).isotope({ sortBy: 'original-order' });
+    });
+    
     this.initialCount++;
 };
 

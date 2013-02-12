@@ -1,6 +1,6 @@
 require.config({
     urlArgs: 'cb=' + Math.random(),
-    baseUrl: '.',
+    baseUrl: '../../',
     packages: [{
         name: 'streamhub-backbone',
         location: './lib/streamhub-backbone'
