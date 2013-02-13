@@ -118,10 +118,11 @@ var IsotopeView = Backbone.View.extend({
 });
 
 /**
-Add Content to the IsotopeView by inserting it in the DOM, then making sure Isotope
-    lays items out correctly
-@private
-@param {Content} item - A Content model */
+ * Add Content to the IsotopeView by inserting it in the DOM, then making sure Isotope
+ *     lays items out correctly
+ * @private
+ * @param {Content} item - A Content model
+ */
 IsotopeView.prototype._addItem = function(item, opts) {
     if (!this.collection._started && this.initialNumToDisplay !== null) {
         if (this.initialCount == this.initialNumToDisplay) {
@@ -149,9 +150,10 @@ IsotopeView.prototype._addItem = function(item, opts) {
 };
 
 /**
-Insert a new ContentView into the DOM
-@private
-@param {Content} item - A Content model */
+ * Insert a new ContentView into the DOM
+ * @private
+ * @param {Content} item - A Content model
+ */
 IsotopeView.prototype._insertItem = function (item, opts) {
     var self = this,
         newItem = $(document.createElement('div')),
