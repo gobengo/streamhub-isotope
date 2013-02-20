@@ -105,6 +105,11 @@ var IsotopeView = Backbone.View.extend({
         this.$el.isotope(isotopeOptions);
         // Render Items already in the Collection
         this.collection.forEach(function(item) {
+            var existingElement = self.getElementByContentId(item.get('id'));
+            // Ignore if this Content is already in DOM
+            if (existingElement) {
+                return;
+            }
             self._insertItem(item, {});
             if (self.collection.indexOf(item) == self.collection.length-1) {
                 self.$el.imagesLoaded(function () {
@@ -117,6 +122,14 @@ var IsotopeView = Backbone.View.extend({
     }
 });
 
+IsotopeView.prototype.getElementByContentId = function (contentId) {
+    var $elements = this.$el.find('*[data-hub-content-id="'+contentId+'"]');
+    if ($elements.length===0) {
+        return false;
+    }
+    return $elements;
+};
+
 /**
  * Add Content to the IsotopeView by inserting it in the DOM, then making sure Isotope
  *     lays items out correctly
@@ -124,6 +137,7 @@ var IsotopeView = Backbone.View.extend({
  * @param {Content} item - A Content model
  */
 IsotopeView.prototype._addItem = function(item, opts) {
+    console.log('_addItem', item.get('id'));
     if (!this.collection._started && this.initialNumToDisplay !== null) {
         if (this.initialCount == this.initialNumToDisplay) {
             this.initialCount++;
@@ -159,6 +173,8 @@ IsotopeView.prototype._insertItem = function (item, opts) {
         newItem = $(document.createElement('div')),
         json = item.toJSON();
 
+    console.log('_insertItem', item.get('id'))
+    
     if ( ! json.author) {
         // TODO: These may be deletes... handle them.
         console.log("DefaultView: No author for Content, skipping");
