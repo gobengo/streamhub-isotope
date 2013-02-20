@@ -35,6 +35,7 @@ var IsotopeView = Backbone.View.extend({
      * @todo allow passing custom contentView
      */
     initialize: function (opts) {
+        var self = this;
         this._contentViewOpts = opts.contentViewOptions || {};
         this._sourceOpts = opts.sources || {};
         this._isotopeOpts = opts.isotope || {};
@@ -47,6 +48,10 @@ var IsotopeView = Backbone.View.extend({
 
         this.collection.on('add', this._addItem, this);
         this.collection.on('initialDataLoaded', this.render, this);
+
+        setInterval(function () {
+            self.relayout();
+        }, 2000);
         return this;
     },
 
@@ -137,7 +142,6 @@ IsotopeView.prototype.getElementByContentId = function (contentId) {
  * @param {Content} item - A Content model
  */
 IsotopeView.prototype._addItem = function(item, opts) {
-    console.log('_addItem', item.get('id'));
     if (!this.collection._started && this.initialNumToDisplay !== null) {
         if (this.initialCount == this.initialNumToDisplay) {
             this.initialCount++;
@@ -154,11 +158,6 @@ IsotopeView.prototype._addItem = function(item, opts) {
         console.log("DefaultView: Could not create a hub item element to add to container");
         return;
     }
-
-    var that = this;
-    $newItem.imagesLoaded(function () {
-        that.$el.isotope( 'reloadItems' ).isotope({ sortBy: 'original-order' });
-    });
     
     this.initialCount++;
 };
@@ -172,8 +171,6 @@ IsotopeView.prototype._insertItem = function (item, opts) {
     var self = this,
         newItem = $(document.createElement('div')),
         json = item.toJSON();
-
-    console.log('_insertItem', item.get('id'))
     
     if ( ! json.author) {
         // TODO: These may be deletes... handle them.
@@ -191,6 +188,9 @@ IsotopeView.prototype._insertItem = function (item, opts) {
         if (content.get('source')==sources.RSS) {
             return _(configuredOpts).extend(self._sourceOpts.rss||{});
         }
+        if (content.get('source')==sources.STREAMHUB) {
+            return _(configuredOpts).extend(self._sourceOpts.ugc||{});
+        }
         return configuredOpts;
     }
 
@@ -199,17 +199,35 @@ IsotopeView.prototype._insertItem = function (item, opts) {
         el: newItem
     }, _getContentViewOpts(item)));
 
+    newItem.imagesLoaded(function () {
+        self.relayout();
+    });
+
     newItem
       .addClass('hub-item')
       .attr('data-hub-contentId', json.id);
 
-    if (this.collection._initialized && !this.finishInitializing) {
+    var colIndex = this.collection.indexOf(item),
+        domIndex = this.collection.length - (colIndex + 1),
+        nextEl = this.$el.find('> *:nth-child('+ (domIndex+1) +')');
+
+    // If no nextItem or first Item, insert at beginning
+    if (nextEl.length === 0 || domIndex === 0) {
         this.$el.prepend(newItem);
-    } else {
-        this.$el.append(newItem);
     }
+    // Else insert before the nextEl
+    else {
+        newItem.insertBefore(nextEl);
+    }
+
     return newItem;
 };
+
+IsotopeView.prototype.relayout = function () {
+    this.$el
+        .isotope('reLayout')
+        .isotope('reloadItems').isotope({ sortBy: 'original-order' });
+}
 
 return IsotopeView;
 });
