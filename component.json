@@ -5,7 +5,7 @@
     "./main.js"
   ],
   "dependencies": {
-    "streamhub-backbone": "git://github.com/gobengo/streamhub-backbone.git#v1.1.0-alpha.6",
+    "streamhub-backbone": "git://github.com/gobengo/streamhub-backbone.git",
     "isotope": "*",
     "jasmine": "*"
   }
