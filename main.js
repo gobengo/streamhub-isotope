@@ -128,7 +128,7 @@ var IsotopeView = Backbone.View.extend({
 });
 
 IsotopeView.prototype.getElementByContentId = function (contentId) {
-    var $elements = this.$el.find('*[data-hub-content-id="'+contentId+'"]');
+    var $elements = this.$el.find('*[data-hub-contentid="'+contentId+'"]');
     if ($elements.length===0) {
         return false;
     }
