@@ -101,7 +101,7 @@ var IsotopeView = Backbone.View.extend({
             isAnimated: true,
             getSortData : {
                 index : function( $item ) {
-                    return $item.index();
+                    return 0 - $item.attr('data-hub-createdAt');
                 }
             },
             sortBy : 'index'
@@ -205,6 +205,7 @@ IsotopeView.prototype._insertItem = function (item, opts) {
 
     newItem
       .addClass('hub-item')
+      .attr('data-hub-createdAt', json.createdAt)
       .attr('data-hub-contentId', json.id);
 
     var colIndex = this.collection.indexOf(item),
@@ -226,7 +227,7 @@ IsotopeView.prototype._insertItem = function (item, opts) {
 IsotopeView.prototype.relayout = function () {
     this.$el
         .isotope('reLayout')
-        .isotope('reloadItems').isotope({ sortBy: 'original-order' });
+        .isotope('reloadItems').isotope({ sortBy: 'index' });
 }
 
 return IsotopeView;
